@@ -6,6 +6,12 @@ const IncidentList = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [status, setStatus] = useState('NEW');
+    const [editingId, setEditingId] = useState(null);
+    const [errors, setErrors] = useState({}); // save error
+
+    // 分页相关状态
+    const [currentPage, setCurrentPage] = useState(1);
+    const [incidentsPerPage] = useState(3); // 3 records per page
 
     useEffect(() => {
         fetchIncidents();
@@ -18,20 +24,76 @@ const IncidentList = () => {
 
     const createIncident = async () => {
         const newIncident = { title, description, status, timestamp: new Date().toISOString() };
-        await axios.post('http://localhost:8080/api/incidents', newIncident);
-        fetchIncidents();
-        setTitle('');
-        setDescription('');
+
+        try {
+            await axios.post('http://localhost:8080/api/incidents', newIncident);
+            await fetchIncidents(); // refresh event
+            resetForm(); // reset
+            setErrors({}); // clear error message
+        } catch (error) {
+            if (error.response) {
+                // 服务器返回的错误信息
+                setErrors(error.response.data); // set error to status
+                console.log("Validation errors:", error.response.data); // print error for debug
+            } else {
+                console.error("Error:", error.message);
+                setErrors({ general: "An unexpected error occurred." }); // normal error
+            }
+        }
+    };
+
+    const editIncident = async (id) => {
+        const incidentToEdit = incidents.find(incident => incident.id === id);
+        setTitle(incidentToEdit.title);
+        setDescription(incidentToEdit.description);
+        setStatus(incidentToEdit.status);
+        setEditingId(id);
+    };
+
+    const updateIncident = async () => {
+        const updatedIncident = { title, description, status, timestamp: new Date().toISOString() };
+        await axios.put(`http://localhost:8080/api/incidents/${editingId}`, updatedIncident);
+        await fetchIncidents();
+        resetForm();
     };
 
     const deleteIncident = async (id) => {
         await axios.delete(`http://localhost:8080/api/incidents/${id}`);
-        fetchIncidents();
+        await fetchIncidents();
+    };
+
+    const resetForm = () => {
+        setTitle('');
+        setDescription('');
+        setStatus('NEW');
+        setEditingId(null);
+    };
+
+    // calculate total number of records
+    const indexOfLastIncident = currentPage * incidentsPerPage;
+    const indexOfFirstIncident = indexOfLastIncident - incidentsPerPage;
+    const currentIncidents = incidents.slice(indexOfFirstIncident, indexOfLastIncident);
+
+    // 计算总页数
+    const totalPages = Math.ceil(incidents.length / incidentsPerPage);
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const handlePrevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
     };
 
     return (
         <div>
             <h1>Incident Manager</h1>
+            {errors.title && <div style={{ color: 'red' }}>{errors.title}</div>} {/* handle tittle error */}
+            {errors.description && <div style={{ color: 'red' }}>{errors.description}</div>} {/* handle description error */}
             <input
                 type="text"
                 value={title}
@@ -49,18 +111,28 @@ const IncidentList = () => {
                 <option value="IN_PROGRESS">IN_PROGRESS</option>
                 <option value="CLOSED">CLOSED</option>
             </select>
-            <button onClick={createIncident}>Create Incident</button>
+            <button onClick={editingId ? updateIncident : createIncident}>
+                {editingId ? 'Save Changes' : 'Create Incident'}
+            </button>
 
             <ul>
-                {incidents.map(incident => (
+                {currentIncidents.map(incident => (
                     <li key={incident.id}>
                         {incident.title} - {incident.status}
+                        <button onClick={() => editIncident(incident.id)}>Edit</button>
                         <button onClick={() => deleteIncident(incident.id)}>Delete</button>
                     </li>
                 ))}
             </ul>
+
+            {/* 分页按钮 */}
+            <div>
+                <button onClick={handlePrevPage} disabled={currentPage === 1}>Previous</button>
+                <span> Page {currentPage} / {totalPages} </span>
+                <button onClick={handleNextPage} disabled={currentPage === totalPages}>Next</button>
+            </div>
         </div>
     );
 };
-export default IncidentList;
 
+export default IncidentList;
