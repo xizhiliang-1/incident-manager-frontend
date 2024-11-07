@@ -1,0 +1,76 @@
+/* 基础样式 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+/* 表头样式 */
+thead {
+    background-color: #f1f1f1;
+    color: #333;
+    font-weight: bold;
+    text-align: left;
+}
+
+thead th {
+    padding: 12px 15px;
+    border-bottom: 2px solid #ddd;
+}
+
+/* 表格行样式 */
+tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+/* 行内单元格样式 */
+td {
+    padding: 10px 15px;
+    color: #555;
+}
+
+/* 隔行变色效果 */
+tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+/* 悬停效果 */
+tbody tr:hover {
+    background-color: #e6f7ff;
+    cursor: pointer;
+}
+
+/* 邮件列表风格的紧凑效果 */
+tbody tr td:first-child {
+    font-weight: bold;
+}
+
+tbody tr td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px; /* 可根据需要调整单元格的最大宽度 */
+}
+
+/* 设置在小屏幕上的响应式表格 */
+@media (max-width: 768px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+        width: 100%;
+    }
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    tr {
+        margin: 0 0 1rem 0;
+    }
+    td {
+        border: none;
+        padding: 8px;
+        position: relative;
+        text-align: left;
+    }
+}

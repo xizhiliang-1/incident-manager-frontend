@@ -11,7 +11,7 @@ const IncidentList = () => {
 
     // 分页相关状态
     const [currentPage, setCurrentPage] = useState(1);
-    const [incidentsPerPage] = useState(3); // 3 records per page
+    const [incidentsPerPage] = useState(3); // 3 per page
 
     useEffect(() => {
         fetchIncidents();
@@ -29,15 +29,15 @@ const IncidentList = () => {
             await axios.post('http://localhost:8080/api/incidents', newIncident);
             await fetchIncidents(); // refresh event
             resetForm(); // reset
-            setErrors({}); // clear error message
+            setErrors({}); // clear error
         } catch (error) {
             if (error.response) {
                 // 服务器返回的错误信息
-                setErrors(error.response.data); // set error to status
-                console.log("Validation errors:", error.response.data); // print error for debug
+                setErrors(error.response.data); // 将错误信息设置到状态中
+                console.log("Validation errors:", error.response.data); // 打印错误信息到控制台
             } else {
                 console.error("Error:", error.message);
-                setErrors({ general: "An unexpected error occurred." }); // normal error
+                setErrors({ general: "An unexpected error occurred." }); // 一般错误信息
             }
         }
     };
@@ -69,12 +69,12 @@ const IncidentList = () => {
         setEditingId(null);
     };
 
-    // calculate total number of records
+    // calc page
     const indexOfLastIncident = currentPage * incidentsPerPage;
     const indexOfFirstIncident = indexOfLastIncident - incidentsPerPage;
     const currentIncidents = incidents.slice(indexOfFirstIncident, indexOfLastIncident);
 
-    // 计算总页数
+    // total
     const totalPages = Math.ceil(incidents.length / incidentsPerPage);
 
     const handleNextPage = () => {
@@ -125,7 +125,7 @@ const IncidentList = () => {
                 ))}
             </ul>
 
-            {/* 分页按钮 */}
+            {/* Page */}
             <div>
                 <button onClick={handlePrevPage} disabled={currentPage === 1}>Previous</button>
                 <span> Page {currentPage} / {totalPages} </span>
