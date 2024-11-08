@@ -17,6 +17,28 @@ thead {
 thead th {
     padding: 12px 15px;
     border-bottom: 2px solid #ddd;
+    position: relative;
+}
+
+/* 排序按钮 */
+.sort-btn {
+    background: none;
+    border: none;
+    font-size: inherit;
+    color: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+/* 输入框样式 */
+.filter-input {
+    margin-top: 5px;
+    padding: 5px;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 12px;
 }
 
 /* 表格行样式 */
@@ -24,53 +46,23 @@ tbody tr {
     border-bottom: 1px solid #ddd;
 }
 
-/* 行内单元格样式 */
-td {
-    padding: 10px 15px;
-    color: #555;
-}
-
-/* 隔行变色效果 */
 tbody tr:nth-child(odd) {
     background-color: #f9f9f9;
 }
 
-/* 悬停效果 */
 tbody tr:hover {
     background-color: #e6f7ff;
     cursor: pointer;
 }
 
-/* 邮件列表风格的紧凑效果 */
-tbody tr td:first-child {
-    font-weight: bold;
+td {
+    padding: 10px 15px;
 }
 
-tbody tr td {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 150px; /* 可根据需要调整单元格的最大宽度 */
-}
-
-/* 设置在小屏幕上的响应式表格 */
-@media (max-width: 768px) {
-    table, thead, tbody, th, td, tr {
-        display: block;
-        width: 100%;
-    }
-    thead tr {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-    }
-    tr {
-        margin: 0 0 1rem 0;
-    }
-    td {
-        border: none;
-        padding: 8px;
-        position: relative;
-        text-align: left;
-    }
+/* 更改表头输入框的位置 */
+thead th div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
 }
