@@ -1,6 +1,4 @@
-// CSVTable.js
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // 导入 useNavigate
 import '../style/TableStyles.css'; // 导入样式
 import '../style/HeaderStyles.css'; // 导入样式
 
@@ -9,7 +7,6 @@ const CSVTable = () => {
     const [filteredData, setFilteredData] = useState([]);
     const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
     const [filters, setFilters] = useState({});
-    const navigate = useNavigate(); // 获取 navigate 函数
 
     useEffect(() => {
         const txtFilePath = `${process.env.PUBLIC_URL}/data/example.txt`;
@@ -68,11 +65,6 @@ const CSVTable = () => {
         setFilteredData(filteredRows);
     };
 
-    // 跳转到详情页并传递数据
-    const handleRowClick = (row) => {
-        navigate(`/detail/${row.id}`, { state: { row } }); // 使用 navigate 跳转到详情页并传递数据
-    };
-
     return (
         <div>
             {/* Logo 和标题部分 */}
@@ -107,7 +99,7 @@ const CSVTable = () => {
                     </thead>
                     <tbody>
                     {filteredData.map((row, rowIndex) => (
-                        <tr key={rowIndex} onClick={() => handleRowClick(row)}>
+                        <tr key={rowIndex}>
                             {Object.values(row).map((cell, cellIndex) => (
                                 <td key={cellIndex}>{cell}</td>
                             ))}
