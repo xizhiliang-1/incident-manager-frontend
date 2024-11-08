@@ -39,11 +39,15 @@ const CSVTable = () => {
         if (sortConfig.key === key && sortConfig.direction === 'asc') {
             direction = 'desc';
         }
+
         const sortedData = [...filteredData].sort((a, b) => {
-            if (a[key] < b[key]) {
+            const aValue = isNaN(a[key]) ? a[key] : Number(a[key]); // 检测并转换为数字
+            const bValue = isNaN(b[key]) ? b[key] : Number(b[key]); // 检测并转换为数字
+
+            if (aValue < bValue) {
                 return direction === 'asc' ? -1 : 1;
             }
-            if (a[key] > b[key]) {
+            if (aValue > bValue) {
                 return direction === 'asc' ? 1 : -1;
             }
             return 0;
